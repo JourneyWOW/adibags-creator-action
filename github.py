@@ -7,7 +7,7 @@ import requests
 
 
 def get_gist(
-    gist_id=os.environ.get("GITHUB_GIST_ID", "b86d83d7b11377fb4a143d9cb12aef64")
+    gist_id=os.environ.get("GITHUB_GIST_ID", "ee9e4477069294141257acd6abc70463")
 ):
     """Get a gist with a file named "items.json" from GitHub."""
     print("Getting Item Cache from Gist:", gist_id)
@@ -51,7 +51,7 @@ def get_gist(
 
 def update_gist(
     item_cache: dict,
-    gist_id=os.environ.get("GITHUB_GIST_ID", "b86d83d7b11377fb4a143d9cb12aef64"),
+    gist_id=os.environ.get("GITHUB_GIST_ID", "ee9e4477069294141257acd6abc70463"),
 ) -> str:
     """Update the gist with a file named "items.json" on GitHub."""
     if not os.environ.get("GITHUB_GIST_TOKEN"):

@@ -12,7 +12,7 @@ def auth():
         BLIZZARD_API_REGION (defaults to "eu")"""
     print("Getting Access Token from Blizzard")
     r = requests.post(
-        f"https://{os.environ.get('BLIZZARD_API_REGION', 'eu')}.battle.net/oauth/token",
+        f"https://{os.environ.get('BLIZZARD_API_REGION', 'us')}.battle.net/oauth/token",
         data={
             "grant_type": "client_credentials",
         },

@@ -19,7 +19,7 @@ jobs:
     steps:
       # Runs a single command using the runners shell
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
         with:
           fetch-depth: 0
       - name: Processing
@@ -29,14 +29,14 @@ jobs:
           BLIZZ_ID: ${{ secrets.BLIZZ_ID }}
           BLIZZ_SECRET: ${{ secrets.BLIZZ_SECRET }}
       - name: Stylua
-        uses: JohnnyMorganz/stylua-action@v2
+        uses: JohnnyMorganz/stylua-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: latest # NOTE: we recommend pinning to a specific version in case of formatting changes
           # CLI arguments
           args: --verify --indent-type spaces --indent-width 2 --line-endings Windows --quote-style AutoPreferDouble out/AdiBags_REPLACENAME.lua out/Localization.lua
       - name: Luacheck Main Addon
-        uses: lunarmodules/luacheck@v0
+        uses: lunarmodules/luacheck@master
         with:
           args: out/AdiBags_REPLACENAME.lua --ignore 113 211 212 611 614 631
           # ignored (see https://luacheck.readthedocs.io/en/stable/warnings.html):
@@ -47,7 +47,7 @@ jobs:
           # 614: Trailing whitespace in a comment. - These reports are just plain wrong.
           # 631: Line is too long. - Not important.
       - name: Luacheck Localization
-        uses: lunarmodules/luacheck@v0
+        uses: lunarmodules/luacheck@master
         with:
           args: out/Localization.lua --ignore 113 211 212 542 611 614 631
           # additionally ignored:

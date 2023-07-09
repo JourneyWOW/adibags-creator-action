@@ -15,7 +15,7 @@ def main():
     addon = AdiBagsAddon(config_file_path="items/_addon.toml", access_token=access_token,
                          itemname_cache=dict(inital_item_cache))
     print(f"{Fore.YELLOW}Detecting categories.{Fore.RESET}")
-    for idfile in glob("items/*.toml"):
+    for idfile in glob("items/**/*.toml"):
         if "_addon.toml" in idfile:
             continue
         print(f"{Fore.LIGHTBLACK_EX}{idfile}{Fore.RESET}")
