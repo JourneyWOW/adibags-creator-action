@@ -30,15 +30,19 @@ def get_gist(
             # If the request was successful, break out of the loop
             response.raise_for_status()
             data = response.json()
-            if data.get("truncated"):
-                # Fetch the raw content if truncated is True
-                raw_url = data["files"]["items.json"]["raw_url"]
-                raw_response = requests.get(raw_url)
+            file_data = data["files"]["items.json"]
+            if file_data.get("truncated") and file_data.get("raw_url"):
+                print("Using raw URL to fetch content...")
+                # Fetch the raw content only if truncated is True
+                raw_response = requests.get(file_data["raw_url"])
                 raw_response.raise_for_status()
+                print("Raw content fetched:", raw_response.text)
                 return json.loads(raw_response.text)
             else:
-                # If not truncated, parse content directly
-                return json.loads(data["files"]["items.json"]["content"])
+                print("Using content from JSON response directly.")
+                # If not truncated or raw_url doesn't exist, parse content directly
+                print("Content from JSON response:", file_data["content"])
+                return json.loads(file_data["content"])
         except requests.exceptions.RequestException as e:
             attempt += 1
             print(f"Attempt {attempt} failed, retrying in 3 seconds...")
@@ -50,6 +54,7 @@ def get_gist(
 
     print("Failed to fetch Item Cache Gist.")
     return {}
+
 
 def update_gist(
     item_cache: dict,
