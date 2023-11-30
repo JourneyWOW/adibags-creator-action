@@ -16,9 +16,7 @@ def get_gist(
         "X-GitHub-Api-Version": "2022-11-28",
     }
 
-    if os.environ.get(
-        "GITHUB_GIST_TOKEN"
-    ):  # this should make fetching private gists possible
+    if os.environ.get("GITHUB_GIST_TOKEN"):
         headers["Authorization"] = f'Bearer {os.environ.get("GITHUB_GIST_TOKEN")}'
 
     attempt = 0
@@ -31,7 +29,16 @@ def get_gist(
             )
             # If the request was successful, break out of the loop
             response.raise_for_status()
-            break
+            data = response.json()
+            if data.get("truncated"):
+                # Fetch the raw content if truncated is True
+                raw_url = data["files"]["items.json"]["raw_url"]
+                raw_response = requests.get(raw_url)
+                raw_response.raise_for_status()
+                return json.loads(raw_response.text)
+            else:
+                # If not truncated, parse content directly
+                return json.loads(data["files"]["items.json"]["content"])
         except requests.exceptions.RequestException as e:
             attempt += 1
             print(f"Attempt {attempt} failed, retrying in 3 seconds...")
@@ -41,13 +48,8 @@ def get_gist(
             # Wait before retrying
             time.sleep(3)
 
-    if response is not None:
-        print("Successfully fetched Item Cache Gist.")
-        return json.loads(response.json()["files"]["items.json"]["content"])
-    else:
-        print("Failed to fetch Item Cache Gist.")
-        return {}
-
+    print("Failed to fetch Item Cache Gist.")
+    return {}
 
 def update_gist(
     item_cache: dict,
